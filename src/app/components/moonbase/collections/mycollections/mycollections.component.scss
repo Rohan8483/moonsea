@@ -1,0 +1,12 @@
+@import "includes";
+
+.round {
+  width: 54px;
+  height: 54px;
+  margin-right: 1rem;
+  border: 1px solid $primary;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

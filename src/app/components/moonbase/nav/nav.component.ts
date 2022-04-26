@@ -51,6 +51,15 @@ export class NavComponent implements OnInit {
 
   ngOnInit(): void {
 
+    let that = this;
+
+    window.onclick = function (event) {
+      let search = !event.target.matches('#searchBox')
+      if (search) {
+        that.flag = false;
+      }
+    };
+
     this.cs.getWalletObs().subscribe((data: any) => {
      localStorage.setItem('address',data);
       
@@ -70,6 +79,7 @@ export class NavComponent implements OnInit {
     }
     });
     this.checkLoggedInUser();
+
   }
 
 

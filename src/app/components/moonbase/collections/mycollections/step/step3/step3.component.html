@@ -13,18 +13,7 @@
               <div class="flex justify-center" *ngIf="imageUrl.indexOf('.mp4') == -1">
                 <img src="{{ collectionDetails.fileUrl }}" class="border collectionImg" alt="NFT preview" />
 
-                <!-- <div class="card__control">
-                  <div class="status-green card__category">purchasing !</div>
-                  <button class="card__favorite">
-                    <svg class="icon icon-heart">
-                      <use xlink:href="#icon-heart"></use>
-                    </svg>
-                  </button>
-                  <a class="button-small card__button js-popup-open" href="#popup-bid" data-effect="mfp-zoom-in"><span>Place a bid</span>
-                          <svg class="icon icon-scatter-up">
-                            <use xlink:href="#icon-scatter-up"></use>
-                          </svg></a>
-                </div> -->
+
               </div>
               <ng-container *ngIf="imageUrl.indexOf('.mp4') != -1">
                 <video class="video" loop autoplay playsinline oncanplay="this.play()"
@@ -36,32 +25,28 @@
                 <div class="card__body">
                   <div class="card__line justify-space-between align-center">
                     <div class="text-secondary orbitron text-primary">
-                      <!-- {{ f.title.value }} -->
+
                     </div>
-                    <!-- <div
-                      class="text-secondary orbitron text-primary"
-                      *ngIf="!f.title.value"
-                    >
-                      NFT Name
-                    </div> -->
+
 
                   </div>
                   <div class="flex-col card__line w-normal text-center">
-                    <!-- <div class="card__users">
-                      <div class="card__avatar">
-                        <img src="./assets/media/images/moonsea/avatar-big.jpg" alt="Avatar" />
-                      </div>
-                    </div> -->
+
                     <p class="wp100 orbitron text-primary">{{collectionDetails.tokenName }}</p>
-                    <p class="wp100 text-primary mb20">by Enrico Cole</p>
+                    <p class="wp100 text-primary mb20">by
+                      {{collectionDetails?.walletAddress?.slice(0,5)}}...{{collectionDetails?.walletAddress?.slice(collectionDetails?.walletAddress?.length-5,collectionDetails?.walletAddress?.length)}}
+                    </p>
                     <p class="text-primary normal_text text-center mb20">
-                      Confirm details of all NFTs to unlock button. Number of NFTs confirmed
+                      {{collectionDetails.description}}
                       <br />
-                      225/12.000
+                      {{collectionDetails.noOfnft}} items
                     </p>
                     <div class="flex wp100 justify-center">
 
-                      <svg version="1.1" id="trash" xmlns="http://www.w3.org/2000/svg"
+                      <!-- 
+                        -----------------------------Edit and Delete icon dont delete the code---------------------------------------
+                        
+                        <svg version="1.1" id="trash" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" style="
                       enable-background: new 0 0 40 40;
                       width: 36px;
@@ -111,7 +96,7 @@
                             </g>
                           </g>
                         </svg>
-                      </a>
+                      </a> -->
                     </div>
 
                   </div>
@@ -120,21 +105,23 @@
             </div>
           </div>
         </div>
-        <button class="button bg-primary wp100">Confirm details</button>
+        <button class="button bg-primary wp100" (click)="gotoStep01()">Confirm details</button>
       </div>
       <div class="flex2 upload__wrapper">
         <div class="grid grid-2 row-gap">
           <div *ngFor="let item of nftList" class="border-bottom flex justify-space-between">
             <div class="pt30 pb30 text-left wp100">
-              <a href="javascript:void(0)" class="flex text-primary"><img alt="NFT preview"
-                  src="{{item.fileUrl}}" class="nftPreview" />
+              <a href="javascript:void(0)" class="flex text-primary"><img alt="NFT preview" src="{{item.fileUrl}}"
+                  class="nftPreview" />
                 <div class="flex-col flex1">
                   <span class="orbitron text-secondary p16 mb10">
-                   {{item.title ? item.title : 'no title'}}
+                    {{item.title ? item.title : 'no title'}}
                   </span>
                   <div class="flex align-center">
                     <span class="badge badge-success flex1 text-center">Confirmed</span>
-                    <svg version="1.1" id="trash" xmlns="http://www.w3.org/2000/svg"
+                    <!-- 
+                      ----------------------------Trash icon don't delete the code----------------------------
+                      <svg version="1.1" id="trash" xmlns="http://www.w3.org/2000/svg"
                       xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" style="
                         enable-background: new 0 0 40 40;
                         width: 36px;
@@ -155,7 +142,7 @@
               c0.3,0,0.6,0.3,0.6,0.6V26.4z M22.6,13.3h-5.2l0-1.1c0-0.6,0.5-1.1,1.1-1.1h3c0.6,0,1.1,0.5,1.1,1.1V13.3z">
                         </path>
                       </g>
-                    </svg>
+                    </svg> -->
                     <a (click)="edit(item)">
                       <svg version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40"

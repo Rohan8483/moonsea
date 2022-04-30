@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePickerComponent } from '@syncfusion/ej2-angular-calendars';
+import { ModalForCreateNftComponent } from 'src/app/components/moonbase/create-nft/modal-for-create-nft/modal-for-create-nft.component';
+import { ContractService } from 'src/app/services/contract.service';
 import { GetDataService } from 'src/app/services/get-data.service';
 
 @Component({
@@ -10,23 +12,35 @@ import { GetDataService } from 'src/app/services/get-data.service';
   templateUrl: './add-edit-nft.component.html',
   styleUrls: ['./add-edit-nft.component.scss'],
 })
-export class AddEditNftComponent implements OnInit {
+export class AddEditNftComponent implements OnInit ,OnDestroy {
   @ViewChild('ejDatePicker') ejDatePicker: DatePickerComponent | undefined;
   public targetElement: HTMLElement | undefined;
 
   addEditNft: FormGroup;
   dateValue: Date = new Date();
   isApiLoading: boolean;
+  typeOfNft : any;
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddEditNftComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public datepipe: DatePipe,
-    private _getDataService :GetDataService
+    private _getDataService :GetDataService,
+    private dialog: MatDialog,
+    private cs: ContractService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.dialogRef.close();
+  }
 
   ngOnInit(): void {
     console.log(this.data);
+    if(this.data.isMultiple){
+      this.typeOfNft = 'multiple';
+    }else{
+      this.typeOfNft = 'single'
+    }
     
     this.addEditNft = this.fb.group({
       title :['',[Validators.required]],
@@ -41,7 +55,11 @@ export class AddEditNftComponent implements OnInit {
       currentSupply: [''],
       royalties: [''],
       isMultiple :[false],
-      nftAddress : ['']
+      nftAddress : [''],
+      blockchainId :[''],
+      imageUrl:[''],
+      numberOfCopies :['1'],
+      collectionId :['']
     });
 
     this.addEditNft.get('putOnSale')?.valueChanges.subscribe((value) => {
@@ -66,7 +84,11 @@ export class AddEditNftComponent implements OnInit {
         currentSupply: this.data.currentSupply,
         royalties: this.data.royalties,
         isMultiple :this.data.isMultiple,
-        nftAddress :this.data.nftAddress
+        nftAddress :this.data.nftAddress,
+        blockchainId:this.data.blockchainId,
+        imageUrl :this.data.fileUrl,
+        numberOfCopies:this.data.numberOfCopies,
+        collectionId : this.data.collectionId,
       });
 
       (this.addEditNft.controls.propertysize as FormArray).clear();
@@ -118,14 +140,42 @@ export class AddEditNftComponent implements OnInit {
       'yyyy-MM-ddTHH:mm:ss'
     );
     
-    let url ="api/UpdateNftToken";
-    this._getDataService.postRequest(url,this.addEditNft.value).subscribe((res:any)=>{
-      console.log(res);
-      
-    },(err:any)=>{
 
-    })
+    this.openDialogSubmitNFT(this.addEditNft.value);
+
+    // let url ="api/UpdateNftToken";
+    // this._getDataService.postRequest(url,this.addEditNft.value).subscribe((res:any)=>{
+    //   console.log(res);
+    //   if(res.status == 200){
+    //     this._getDataService.showToastr(res.message,res.isSuccess);
+    //     this.close();
+    //   }else{
+    //     this._getDataService.showToastr(res.message,res.isSuccess);
+    //   }
+      
+    // },(err:any)=>{
+    //   this._getDataService.showToastr(err,false);
+    // })
   }
+
+
+  openDialogSubmitNFT(data: any): void {
+    console.log(data);
+    
+    const dialogRef = this.dialog.open(ModalForCreateNftComponent, {
+      width: 'auto',
+      disableClose: true,
+      data: {
+        details: data,
+        globalService: this.cs,
+        typeOfNft: this.typeOfNft,
+      },
+    });
+  }
+
+
+
+
   setTypeOfSale() {
     
     if (this.addEditNft.get('putOnSale')?.value) {
@@ -133,9 +183,10 @@ export class AddEditNftComponent implements OnInit {
         this.addEditNft
           .get('minimunBid')
           ?.setValidators(Validators.required);
-      }else{
-        this.addEditNft.get('startDate')?.clearValidators();
-        this.addEditNft.get('endDate')?.clearValidators();
+          this.addEditNft.get('startDate')?.clearValidators();
+          this.addEditNft.get('startDate')?.updateValueAndValidity();
+          this.addEditNft.get('endDate')?.clearValidators();
+          this.addEditNft.get('endDate')?.updateValueAndValidity();
       }
 
       if (this.addEditNft.get('typeOfSale')?.value == 2) {
@@ -146,14 +197,20 @@ export class AddEditNftComponent implements OnInit {
 
       if (this.addEditNft.get('typeOfSale')?.value == 3) {
         this.addEditNft.get('minimunBid')?.setValidators(Validators.required);
-      }else{
+
         this.addEditNft.get('startDate')?.clearValidators();
         this.addEditNft.get('endDate')?.clearValidators();
+        this.addEditNft.get('startDate')?.updateValueAndValidity();
+        this.addEditNft.get('endDate')?.updateValueAndValidity();
+
       }
     } else {
       this.addEditNft.get('minimunBid')?.clearValidators();
       this.addEditNft.get('startDate')?.clearValidators();
       this.addEditNft.get('endDate')?.clearValidators();
+      this.addEditNft.get('minimunBid')?.updateValueAndValidity();
+      this.addEditNft.get('startDate')?.updateValueAndValidity();
+      this.addEditNft.get('endDate')?.updateValueAndValidity();
     }
   
   }

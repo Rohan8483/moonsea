@@ -1,5 +1,5 @@
 import { ContractService } from './../../../services/contract.service';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -25,6 +25,8 @@ import { RegistrationFormComponent } from './registration-form/registration-form
     ]
 })
 export class NavComponent implements OnInit {
+
+  @ViewChild('searchText') searchInput: ElementRef;
 
   uniquedata :any=[];
   properties:any= [];
@@ -58,6 +60,7 @@ export class NavComponent implements OnInit {
       if (search) {
         that.flag = false;
       }
+      that.flag = false;
     };
 
     this.cs.getWalletObs().subscribe((data: any) => {
@@ -82,6 +85,11 @@ export class NavComponent implements OnInit {
 
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    this.flag = false;
+    this.searchInput.nativeElement.value = '';
+  }
 
 
   condition_check(){

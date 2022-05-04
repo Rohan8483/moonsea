@@ -149,7 +149,7 @@ export class CreateCollectionComponent implements OnInit {
       symbol: ['', [Validators.required]],
       royalties: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]{1,2}?$')],
+        [Validators.required,Validators.min(0),Validators.max(10), Validators.pattern('^[0-9]{1,2}?$')],
       ],
       categoryId: ['1', [Validators.required]],
     });

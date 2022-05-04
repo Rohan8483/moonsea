@@ -60,7 +60,9 @@ export class Step3Component implements OnInit ,OnDestroy{
     this.typeOfNft = 'single';
   }
   ngOnDestroy(): void {
-    this.dialogRef.close();
+    if(this.dialogRef){
+      this.dialogRef.close();
+    }
   }
 
   ngOnInit(): void {
@@ -98,6 +100,7 @@ export class Step3Component implements OnInit ,OnDestroy{
  
 
   edit(item:any){
+    
     item.collectionId = this.collectionId;
      this.dialogRef = this.dialog.open(AddEditNftComponent, {
       width: 'auto',
@@ -110,5 +113,8 @@ export class Step3Component implements OnInit ,OnDestroy{
   }
   gotoStep01(){
     this.createNFTService.subject.next({ tabIndex: 1 });
+  }
+  gotoProfile(walletAddress:any){
+    this.route.navigate(['/profile',walletAddress])
   }
 } 

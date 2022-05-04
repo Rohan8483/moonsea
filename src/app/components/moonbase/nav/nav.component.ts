@@ -7,6 +7,7 @@ import { WindowRefService } from 'src/app/services/window-ref.service';
 import { GetDataService } from 'src/app/services/get-data.service';
 import { environment } from 'src/environments/environment';
 import { RegistrationFormComponent } from './registration-form/registration-form.component';
+import { WalletConnectComponent } from '../wallet-connect/wallet-connect.component';
 
 
 @Component({
@@ -48,6 +49,9 @@ export class NavComponent implements OnInit {
   searchResult: any;
   condition:any = false;
   dialogRef:any;
+  menuItem = false;
+
+
   constructor(private route: Router, private windowRef: WindowRefService, private cs: ContractService, private getDataService: GetDataService, private ngZone: NgZone, private dialog: MatDialog) {
   }
 
@@ -311,6 +315,23 @@ export class NavComponent implements OnInit {
     else{
       this.flag = false;
     }
+  }
+
+  menuopen() {
+    this.menuItem = true;
+  }
+
+  closeMenu() {
+    this.menuItem = false;
+  }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(WalletConnectComponent, {
+      width: 'auto',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
 }

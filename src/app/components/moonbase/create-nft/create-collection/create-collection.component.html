@@ -166,9 +166,12 @@
               </div>
               <div class="popup__btns flex gap">
                 <button class="button wp100" (click)="prev()">Back</button>
-                <button type="submit" class="button text-inherit dark-button mb10 wp100">
+                <button  type="submit" class="button text-inherit dark-button mb10 wp100">
                   Next step
                   <div class="loader text-white" *ngIf="isApiLoading"></div>
+                </button>
+                <button *ngIf="collectionId" (click)="skip()" type="button" class="button text-inherit dark-button mb10 wp100">
+                  Skip
                 </button>
               </div>
             </div>
@@ -201,7 +204,15 @@
                       step03FormControls.royalties.invalid &&
                       (step03FormControls.royalties.touched || step03.submitted)
                     " class="p12 w-normal mt10 mb10 error">
-                    Royalties is required
+                    <div *ngIf="step03FormControls.royalties.errors?.required">
+                      Royalties is required
+                    </div>
+                    <div *ngIf="step03FormControls.royalties.errors?.max">
+                      royalties should below 10
+                    </div>
+                    <div *ngIf="step03FormControls.royalties.errors?.min">
+                      royalties should be above 0
+                    </div>
                   </div>
                 </div>
               </div>
@@ -233,6 +244,9 @@
                   <button type="submit" class="button text-inherit dark-button mb10 wp100">
                     Next step
                     <div class="loader text-white" *ngIf="isApiLoading"></div>
+                  </button>
+                  <button *ngIf="collectionId" (click)="skip()" type="button" class="button text-inherit dark-button mb10 wp100">
+                    Skip
                   </button>
                 </div>
               </div>
@@ -451,7 +465,9 @@
                     Next
                     <div class="loader text-white" *ngIf="isApiLoading"></div>
                   </button>
-                  
+                  <button *ngIf="collectionId" (click)="skip()" type="button" class="button text-inherit dark-button mb10 wp100">
+                    Skip
+                  </button>
                 </div>
               </div>
             </div>

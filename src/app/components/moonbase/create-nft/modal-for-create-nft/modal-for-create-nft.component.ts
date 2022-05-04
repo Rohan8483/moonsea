@@ -31,10 +31,11 @@ export class ModalForCreateNftComponent implements OnInit {
     private createNFTService: CreateNftService,
     private getDataService: GetDataService,
     private contractService: ContractService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.dialogRef.disableClose = true;
     this.checkNetwork();
     this.contractService.getWalletObs().subscribe((data: any) => {
       this.isConnected = this.contractService.checkValidAddress(data);
@@ -113,6 +114,10 @@ export class ModalForCreateNftComponent implements OnInit {
               this.royaltiesDetails = res.data;
               this.getDataService.showToastr(res.message, res.isSuccess);
               this.mintStatusText = 'Done';
+              this.isdisabledDoneBtn = true;
+              if(!this.data.details.putOnSale){
+                this.dialogRef.close();
+              }
               if (this.data.details.putOnSale) {
                 this.signatureStatus = 1;
               } else {
@@ -221,12 +226,14 @@ export class ModalForCreateNftComponent implements OnInit {
       this.dialogRef.close(true);
 
       if (!this.rejectedMetamask) {
-        this.router.navigate([
-          '/profile',
-          this.connectedAddress,
-          'tab',
-          'created',
-        ]);
+        // this.router.navigate([
+        //   '/profile',
+        //   this.connectedAddress,
+        //   'tab',
+        //   'created',
+        // ]);
+        this.createNFTService.subject.next({ tabIndex: 1 });
+        this.router.navigate(['/mycollections']);
       }
     }
   }

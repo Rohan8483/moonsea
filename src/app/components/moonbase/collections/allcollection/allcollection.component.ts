@@ -75,7 +75,7 @@ export class AllcollectionComponent implements OnInit {
  
   getNftList01() {
     this.ngxService.start();
-
+console.log(JSON.stringify(this.filterArray),"sasas")
     this.isApiLoading = true;
     this.collectionApi
       .getNFTListAll(
@@ -89,7 +89,8 @@ export class AllcollectionComponent implements OnInit {
         this.oldpropertiesValue,
         this.searchKeyWord,
         this.categoryId,
-        this.status
+        this.status,
+        JSON.stringify(this.filterArray)
       )
       .subscribe((response: any) => {
         if (response.isSuccess) {
@@ -185,57 +186,70 @@ export class AllcollectionComponent implements OnInit {
 
    filterArray :any =[];
   
-  propertiesSelection(key: any,index:any) {
-    
-    let values: any = [];
+  propertiesSelection(key: any) {
+  
+    let value: any = [];
     let keys: any = [];
-    console.log(this.proeprties);
-   
-
    
     this.foo.filter(function (el: any) {
       if (el.length > 0) {
         for (let i = 0; i < el.length; i++) {
-          values.push(el[i].value);
+          value.push(el[i].value);
           keys.push(el[i].key);
         }
       }
     });
 
-  
-    this.foo.forEach((el:any)=>{
+    
+  debugger
+    this.foo.forEach((el:any,index:any)=>{
       let temp = [];
       for(let i=0;i<el.length;i++){
         if(el[i].key == key){
           temp.push(el[i].value)
          if(this.filterArray.length == 0){
-          this.filterArray.push({key:key,values:temp});
+          this.filterArray.push({keys:key,value:temp});
          }else{
           for(let j=0;j<this.filterArray.length;j++){
-            if(this.filterArray[j].key == key){
-              this.filterArray[j].values = temp ; 
-            }else{
-             let result = this.filterArray.find(x=>x.key == key);
-              if(!result){
-                this.filterArray.push({key:key,values:temp});
-              }
+            if(this.filterArray[j].keys == key){
+              this.filterArray[j].value = temp ; 
             }
+             let result = this.filterArray.find((x: any[])=>x.keys == key);
+              if(!result){
+                this.filterArray.push({keys:key,value:temp});
+              }
+            
           }
         
          }
         
         }
+       
       }
+      let elKeys :any;
+      this.foo.filter(function (elem: any) {
+          for (let i = 0; i < elem.length; i++) {
+            if(elem[i].key == key){
+              elKeys = elem[i].key;
+            }
+          }
+      });
+        if(this.foo[index].length == 0 && !elKeys){
+          var resultIndex=this.filterArray.findIndex(x=>x.keys == key); 
+         if(resultIndex >=0){
+          this.filterArray.splice(resultIndex,1);
+         }
+        }
+       
     })
 
       
   
-    // console.log(JSON.stringify(this.filterArray));
+    console.log(JSON.stringify(this.filterArray));
     
-
-    this.oldpropertiesValue = values.join(',');
+    this.oldpropertiesValue = value.join(',');
     this.oldpropertiesKey = keys.join(',');
-    // this.getNftList01();
+    this.getNftList01();
    
   }
 

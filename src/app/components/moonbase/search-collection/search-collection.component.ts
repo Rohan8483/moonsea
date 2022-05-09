@@ -20,7 +20,7 @@ export class SearchCollectionComponent implements OnInit {
   config: SwiperOptions = {
     slidesPerView: 5,
     spaceBetween: 50,
-    pagination: { clickable: true },
+    
     navigation: true,
     scrollbar: { draggable: true },
     breakpoints: {
@@ -48,7 +48,7 @@ export class SearchCollectionComponent implements OnInit {
   slider: SwiperOptions = {
     slidesPerView: 1,
     spaceBetween: 50,
-    pagination: { clickable: true },
+    
     scrollbar: { draggable: true },
   };
   isApiLoading: boolean = true;
@@ -277,7 +277,7 @@ export class SearchCollectionComponent implements OnInit {
   // }
 
   gotoNftDetails(nftAddress: any, id: any) {
-    this.router.navigate(['/details', nftAddress, id]);
+    this.router.navigate(['/detailsCom/details', nftAddress, id]);
   }
 
   getBlockchainList() {
